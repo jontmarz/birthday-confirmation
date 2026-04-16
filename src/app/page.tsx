@@ -30,7 +30,7 @@ export default async function LandingPage() {
             CODE RED: BIRTHDAY ALERT
           </div>
           <h1 className="text-6xl md:text-8xl font-headline tracking-tighter text-gradient-st drop-shadow-[0_5px_15px_rgba(179,31,31,0.5)]">
-            STRANGER <br/> THINGS
+            VALENTINA <br/> CUMPLE 9
           </h1>
           <p className="text-xl md:text-2xl text-foreground/80 max-w-2xl mx-auto font-medium leading-relaxed italic">
             "{invitationMessage.split('.')[0]}."
