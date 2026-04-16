@@ -1,3 +1,16 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-bg",
+      "description": "Eerie dark forest with red mist and retro 80s vibe",
+      "imageUrl": "https://picsum.photos/seed/hawkins-forest/1200/800",
+      "imageHint": "dark forest red mist"
+    },
+    {
+      "id": "amusement-park",
+      "description": "Retro amusement park at night with neon lights",
+      "imageUrl": "https://picsum.photos/seed/salitre-magico/800/600",
+      "imageHint": "amusement park neon night"
+    }
+  ]
 }
