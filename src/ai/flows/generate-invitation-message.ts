@@ -16,12 +16,20 @@ export type GenerateInvitationMessageInput = z.infer<typeof GenerateInvitationMe
 const GenerateInvitationMessageOutputSchema = z.string().describe('The generated Stranger Things-themed invitation message.');
 export type GenerateInvitationMessageOutput = z.infer<typeof GenerateInvitationMessageOutputSchema>;
 
+const DEFAULT_INVITATION = "Something is coming. Something hungry for blood. A shadow grows on the wall behind you, swallowing you in darkness. Join us for a 'Stranger Things' birthday adventure at Salitre Mágico on May 23rd at 10:00 AM. It's going to be a day of pura diversión! Friends don't lie, so don't miss out.";
+
 export async function generateInvitationMessage(input: GenerateInvitationMessageInput): Promise<GenerateInvitationMessageOutput> {
+  // Defensive check for API key
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_GENAI_API_KEY;
+  if (!apiKey || apiKey.includes('tu_') || apiKey === 'undefined') {
+    return DEFAULT_INVITATION;
+  }
+
   try {
     return await generateInvitationMessageFlow(input);
   } catch (error) {
     console.error('AI Invitation generation failed:', error);
-    return "Something is coming. Something hungry for blood. A shadow grows on the wall behind you, swallowing you in darkness. Join us for a 'Stranger Things' birthday adventure at Salitre Mágico on May 23rd at 10:00 AM. It's going to be a day of pura diversión! Friends don't lie, so don't miss out.";
+    return DEFAULT_INVITATION;
   }
 }
 

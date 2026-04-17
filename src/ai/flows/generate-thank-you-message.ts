@@ -23,14 +23,22 @@ export type GenerateThankYouMessageOutput = z.infer<typeof GenerateThankYouMessa
 export async function generateThankYouMessage(
   input: GenerateThankYouMessageInput
 ): Promise<GenerateThankYouMessageOutput> {
+  const guestName = input.guestName || 'Friend';
+  const fallbackMessage = {
+    message: `Welcome to the crew, ${guestName}! You've just stepped into the Upside Down. We're so glad you're joining us for this adventure at Salitre Mágico. Remember: friends don't lie, and this is going to be a day of pura diversión! Stay safe in Hawkins.`
+  };
+
+  // Defensive check for API key
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_GENAI_API_KEY;
+  if (!apiKey || apiKey.includes('tu_') || apiKey === 'undefined') {
+    return fallbackMessage;
+  }
+
   try {
     return await generateThankYouMessageFlow(input);
   } catch (error) {
     console.error('AI Thank You message generation failed:', error);
-    const guestName = input.guestName || 'Friend';
-    return {
-      message: `Welcome to the crew, ${guestName}! You've just stepped into the Upside Down. We're so glad you're joining us for this adventure at Salitre Mágico. Remember: friends don't lie, and this is going to be a day of pura diversión! Stay safe in Hawkins.`
-    };
+    return fallbackMessage;
   }
 }
 
