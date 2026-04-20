@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { User, Phone, Mail, Send } from 'lucide-react';
+import { User, Phone, Send } from 'lucide-react';
 import { submitRSVP } from '@/app/actions';
 
 function SubmitButton() {
@@ -60,7 +60,7 @@ export function RSVPForm() {
           <div className="space-y-2">
             <Label htmlFor="name" className="text-foreground/80 font-medium flex items-center gap-2">
               <User className="w-4 h-4 text-primary" />
-              Nombre Completo
+              Nombre Invitado
             </Label>
             <Input 
               id="name"
@@ -70,20 +70,7 @@ export function RSVPForm() {
               className="bg-background/50 border-border focus:border-primary focus:ring-primary transition-all"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-foreground/80 font-medium flex items-center gap-2">
-              <Mail className="w-4 h-4 text-primary" />
-              Correo Electrónico
-            </Label>
-            <Input 
-              id="email"
-              name="email"
-              type="email"
-              placeholder="eleven@hawkins.com"
-              required
-              className="bg-background/50 border-border focus:border-primary focus:ring-primary transition-all"
-            />
-          </div>
+
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-foreground/80 font-medium flex items-center gap-2">
               <Phone className="w-4 h-4 text-primary" />

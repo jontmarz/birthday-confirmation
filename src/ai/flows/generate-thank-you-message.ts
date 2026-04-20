@@ -25,12 +25,12 @@ export async function generateThankYouMessage(
 ): Promise<GenerateThankYouMessageOutput> {
   const guestName = input.guestName || 'Friend';
   const fallbackMessage = {
-    message: `Welcome to the crew, ${guestName}! You've just stepped into the Upside Down. We're so glad you're joining us for this adventure at Salitre Mágico. Remember: friends don't lie, and this is going to be a day of pura diversión! Stay safe in Hawkins.`
+    message: `¡Bienvenid@ al equipo, ${guestName}! Acabas de entrar en el Upside Down. Nos alegra mucho que te unas a nosotros en esta aventura en Salitre Mágico. Recuerda: los amigos no mienten, ¡y este va a ser un día de pura diversión! Cuídate en Hawkins.`
   };
 
   // Defensive check for API key
   const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_GENAI_API_KEY;
-  if (!apiKey || apiKey.includes('tu_') || apiKey === 'undefined') {
+  if (!apiKey || apiKey.includes('tu_') || apiKey.includes('your_') || apiKey === 'undefined') {
     return fallbackMessage;
   }
 
@@ -53,6 +53,8 @@ const generateThankYouMessagePrompt = ai.definePrompt({
   Make sure to incorporate elements and phrases reminiscent of "Stranger Things" (e.g., Upside Down, Hawkins, Demogorgon, Friends Don't Lie, Eleven, Code Red, etc.) and express excitement for a day of "pura diversión".
   
   If a guest name is provided, personalize the message.
+  
+  Please write the message entirely in Spanish language.
   
   Guest Name: {{{guestName}}}`,
 });

@@ -53,11 +53,17 @@ export default async function ThanksPage({ searchParams }: ThanksPageProps) {
             </Link>
           </Button>
           <Button asChild className="bg-primary hover:bg-primary/80">
-            <Link href="https://maps.google.com/?q=Salite+Magico" target="_blank" className="flex items-center gap-2">
+            <Link href="https://maps.google.com/?q=Salitre+Mágico" target="_blank" className="flex items-center gap-2">
               <Home className="w-4 h-4" />
               CÓMO LLEGAR
             </Link>
           </Button>
+        </div>
+
+        <div className="pt-6">
+          <p className="text-lg text-muted-foreground italic leading-relaxed">
+            ¡Te esperamos en la entrada principal, por la calle 63!
+          </p>
         </div>
 
         <div className="pt-6">
@@ -66,6 +72,12 @@ export default async function ThanksPage({ searchParams }: ThanksPageProps) {
             <span className="font-headline text-xs tracking-widest uppercase">Hawkins Division</span>
             <div className="h-px w-12 bg-muted" />
           </div>
+        </div>
+        
+        <div className="pt-4 text-center text-muted-foreground text-xs sm:text-sm">
+          <p>
+            Diseñado y desarrollado por <a href="https://jontmarz.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-bold">Jon Marz</a>. Todos los derechos reservados.
+          </p>
         </div>
       </div>
     </div>
