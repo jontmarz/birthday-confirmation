@@ -2,7 +2,7 @@
 
 ## Core Features:
 
-- Event Landing Page: Display birthday party details including date (May 23), time (10 AM), location (Salite Mágico amusement park), and the 'Stranger Things' theme, along with an inviting message to celebrate.
+- Event Landing Page: Display birthday party details including date (May 23), time (10 AM), location (Salitre Mágico amusement park), and the 'Stranger Things' theme, along with an inviting message to celebrate.
 - RSVP Form Submission: Provide a form with fields for 'Name' and 'Phone/Whatsapp number' to collect guest attendance confirmations.
 - MailerLite Integration: Submit collected guest data (name and phone/Whatsapp) to MailerLite for attendance tracking and management.
 - Themed Thank You Page: Upon successful form submission, redirect users to a confirmation page that expresses gratitude and confirms it will be a day of 'pura diversión'.

@@ -71,7 +71,7 @@ export default async function LandingPage() {
           <div className="relative rounded-2xl overflow-hidden border-2 border-primary/20 aspect-video shadow-2xl">
             <Image 
               src={parkImage?.imageUrl || "https://picsum.photos/seed/park1/800/600"} 
-              alt="Salite Mágico Theme" 
+              alt="Salitre Mágico Theme" 
               fill 
               className="object-cover"
               data-ai-hint="amusement park neon night"
@@ -85,7 +85,7 @@ export default async function LandingPage() {
             </h2>
             <div className="prose prose-invert max-w-none text-muted-foreground text-lg leading-relaxed">
               <p>
-                Prepárate para una celebración que desafía la realidad. Nos vemos en el Salite Mágico para un día de adrenalina y misterio. No olvides confirmar tu asistencia, porque en Hawkins, <strong>los amigos no mienten</strong>.
+                Prepárate para una celebración que desafía la realidad. Nos vemos en el Salitre Mágico para un día de adrenalina y misterio. No olvides confirmar tu asistencia, porque en Hawkins, <strong>los amigos no mienten</strong>.
               </p>
               <p className="mt-4 p-4 border-l-4 border-secondary bg-secondary/10 text-foreground italic">
                 "{invitationMessage}"

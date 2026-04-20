@@ -25,12 +25,32 @@ export async function generateInvitationMessage(input: GenerateInvitationMessage
     return DEFAULT_INVITATION;
   }
 
-  try {
-    return await generateInvitationMessageFlow(input);
-  } catch (error) {
-    console.error('AI Invitation generation failed:', error);
-    return DEFAULT_INVITATION;
+  const MAX_RETRIES = 3;
+  let retries = 0;
+  let delay = 1000; // 1 second initial delay
+
+  while (retries < MAX_RETRIES) {
+    try {
+      return await generateInvitationMessageFlow(input);
+    } catch (error: any) {
+      console.error(`AI Invitation generation failed (attempt ${retries + 1}/${MAX_RETRIES}):`, error);
+      // Check if it's a 503 or similar transient error
+      if (error.status === 'UNAVAILABLE' || error.status === 503 || error.message?.includes('503 Service Unavailable')) {
+        retries++;
+        if (retries < MAX_RETRIES) {
+          console.log(`Retrying in ${delay / 1000} seconds...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2; // Exponential backoff
+        }
+      } else {
+        // If it's not a transient error, re-throw or return default immediately
+        return DEFAULT_INVITATION;
+      }
+    }
   }
+  // If all retries fail
+  console.error('All AI Invitation generation retries failed.');
+  return DEFAULT_INVITATION;
 }
 
 const prompt = ai.definePrompt({
