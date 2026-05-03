@@ -8,6 +8,8 @@ import { HeroVideo } from '@/components/hero-video';
 
 export default async function LandingPage() {
   const invitationMessage = await generateInvitationMessage({});
+  const messageHero = invitationMessage.split(' ').slice(0, 20).join(' ');
+  const messageDetail = invitationMessage.split(' ').slice(20).join(' ');
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-bg');
   const parkImage = PlaceHolderImages.find(img => img.id === 'amusement-park');
 
@@ -25,7 +27,7 @@ export default async function LandingPage() {
             VALENTINA <br/> CUMPLE 9
           </h1>
           <p className="text-xl md:text-2xl text-foreground/80 max-w-2xl mx-auto font-medium leading-relaxed italic">
-            "{invitationMessage.split('.')[0]}."
+            "{messageHero}..."
           </p>
         </div>
 
@@ -43,7 +45,7 @@ export default async function LandingPage() {
           </div>
           <h3 className="font-headline text-xl text-primary">FECHA</h3>
           <p className="text-2xl font-bold">23 de Mayo</p>
-          <p className="text-muted-foreground">Hawkins Time</p>
+          <p className="text-muted-foreground">Hawkins Date</p>
         </div>
 
         <div className="flex flex-col items-center text-center space-y-4 p-8 bg-card/30 rounded-2xl border border-primary/10 backdrop-blur-sm group hover:border-primary/40 transition-all">
@@ -51,7 +53,7 @@ export default async function LandingPage() {
             <Clock className="w-8 h-8 text-primary" />
           </div>
           <h3 className="font-headline text-xl text-primary">HORA</h3>
-          <p className="text-2xl font-bold">10:30 AM</p>
+          <p className="text-2xl font-bold">10:00 AM</p>
           <p className="text-muted-foreground">Antes del atardecer</p>
         </div>
 
@@ -68,39 +70,43 @@ export default async function LandingPage() {
       {/* Main Content / Form Section */}
       <section className="w-full max-w-6xl px-4 py-20 flex flex-col md:flex-row gap-12 items-center">
         <div className="flex-1 space-y-8">
-          <div className="relative rounded-2xl overflow-hidden border-2 border-primary/20 aspect-video shadow-2xl">
-            <Image 
-              src={parkImage?.imageUrl || "https://picsum.photos/seed/park1/800/600"} 
-              alt="Salitre Mágico Theme" 
-              fill 
-              className="object-cover"
-              data-ai-hint="amusement park neon night"
-            />
-            <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
-          </div>
           <div className="space-y-4">
             <h2 className="font-headline text-4xl text-primary flex items-center gap-3">
               <Ghost className="w-8 h-8" />
               BIENVENIDOS AL OTRO LADO
             </h2>
-            <div className="prose prose-invert max-w-none text-muted-foreground text-lg leading-relaxed">
-              <p>
-                Prepárate para una celebración que desafía la realidad. Nos vemos en el Salitre Mágico para un día de adrenalina y misterio. No olvides confirmar tu asistencia, porque en Hawkins, <strong>los amigos no mienten</strong>.
-              </p>
+            <div className="prose prose-invert max-w-none text-lg leading-relaxed">
               <p className="mt-4 p-4 border-l-4 border-secondary bg-secondary/10 text-foreground italic">
-                "{invitationMessage}"
+                "...{messageDetail}"
               </p>
             </div>
           </div>
         </div>
 
         <div className="flex-1 w-full max-w-md" id="rsvp">
+          <p className="text-muted-foreground mb-4">
+            Prepárate para una celebración que desafía la realidad. Nos vemos en el Salitre Mágico para un día de adrenalina y misterio. No olvides confirmar tu asistencia, porque en Hawkins, <strong>los amigos no mienten</strong>.
+          </p>
           <RSVPForm />
         </div>
       </section>
 
+      {/* Bottom Image */}
+      <section className="w-full max-w-5xl mx-auto px-4 mb-20 flex justify-center">
+        <div className="relative w-full rounded-2xl overflow-hidden border-2 border-primary/20 aspect-video shadow-2xl">
+          <Image 
+            src={parkImage?.imageUrl || "https://picsum.photos/seed/park1/800/600"} 
+            alt="Salitre Mágico Theme" 
+            fill 
+            className="object-cover"
+            data-ai-hint="amusement park neon night"
+          />
+          <div className="absolute inset-0 bg-black/30" />
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="w-full py-12 px-4 border-t border-border mt-20 text-center text-muted-foreground text-sm space-y-4">
+      <footer className="w-full pb-12 px-4 border-t border-border text-center text-muted-foreground text-sm space-y-4">
         <p className="font-headline tracking-widest">FRIENDS DON'T LIE</p>
         <p>
           Diseñado y desarrollado por <a href="https://jontmarz.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-bold">Jon Marz</a>. Todos los derechos reservados.

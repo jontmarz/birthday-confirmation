@@ -61,9 +61,10 @@ Your task is to generate a compelling and engaging invitation message for a "Str
 
 The party details are as follows:
 - Date: May 23
-- Time: starting at 10:30 AM
+- Time: starting at 10:00 AM
 - Location: Salitre Mágico, Parque de Diversiones
 - Theme: Stranger Things
+- Special Message: "¡RECUERDA! Lleva capa impermeable y/o ropa de cambio."
 
 Craft a message that captures the eerie, retro-futuristic, and adventurous spirit of "Stranger Things." Encourage guests to join the celebration for a day of fun and excitement, referencing elements from the show without being too explicit or requiring prior knowledge to understand. The message should be friendly and inviting, suitable for a birthday party landing page.
 

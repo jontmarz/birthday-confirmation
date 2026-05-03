@@ -35,6 +35,9 @@ export default async function ThanksPage({ searchParams }: ThanksPageProps) {
           <p className="text-xl font-medium text-foreground/90">
             Será un día de <span className="text-secondary font-bold">pura diversión</span>.
           </p>
+          <p className="text-xl font-medium text-foreground/90">
+            <b>¡RECUERDA!</b> Lleva capa impermeable y/o ropa de cambio.
+          </p>
         </div>
 
         <div className="p-6 bg-black/40 rounded-2xl border border-white/5 relative overflow-hidden">
@@ -63,6 +66,9 @@ export default async function ThanksPage({ searchParams }: ThanksPageProps) {
         <div className="pt-6">
           <p className="text-lg text-muted-foreground italic leading-relaxed">
             ¡Te esperamos en la entrada principal, por la calle 63!
+          </p>
+          <p className="text-lg text-muted-foreground italic leading-relaxed">
+            Llega puntual para disfrutar de las atracciones y no perderte de la diversión.
           </p>
         </div>
 
