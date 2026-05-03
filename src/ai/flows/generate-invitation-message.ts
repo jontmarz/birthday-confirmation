@@ -13,15 +13,29 @@ import {z} from 'genkit';
 const GenerateInvitationMessageInputSchema = z.object({}).describe('Input for generating a Stranger Things-themed invitation message. No specific parameters are needed as event details are fixed.');
 export type GenerateInvitationMessageInput = z.infer<typeof GenerateInvitationMessageInputSchema>;
 
-const GenerateInvitationMessageOutputSchema = z.string().describe('The generated Stranger Things-themed invitation message.');
-export type GenerateInvitationMessageOutput = z.infer<typeof GenerateInvitationMessageOutputSchema>;
+const InvitationMessageFlowOutputSchema = z.object({
+  message: z.string().describe('The generated Stranger Things-themed invitation message.'),
+});
+export type GenerateInvitationMessageOutput = string;
 
 const DEFAULT_INVITATION = "Algo se acerca. Algo sediento de diversión. Una sombra se cierne sobre la pared detrás de ti, envolviéndote de emoción. Acompáñanos en una aventura de cumpleaños al estilo «Stranger Things» en Salitre Mágico el 23 de mayo desde las 10:30 de la mañana. ¡Va a ser un día de pura diversión! Los amigos no mienten, así que no te lo pierdas.";
 
+// Simple in-memory cache for development to avoid hitting rate limits
+let cachedInvitation: string | null = null;
+let cacheTimestamp: number | null = null;
+const CACHE_DURATION = 1000 * 60 * 5; // 5 minutes
+
 export async function generateInvitationMessage(input: GenerateInvitationMessageInput): Promise<GenerateInvitationMessageOutput> {
+  // Return cached message in development if it's not expired
+  if (process.env.NODE_ENV === 'development' && cachedInvitation && cacheTimestamp && (Date.now() - cacheTimestamp < CACHE_DURATION)) {
+    console.log('AI_FLOW_DEBUG: Returning cached invitation message.');
+    return cachedInvitation;
+  }
+
   // Defensive check for API key
   const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_GENAI_API_KEY;
   if (!apiKey || apiKey.includes('tu_') || apiKey.includes('your_') || apiKey === 'undefined') {
+    console.error('AI_FLOW_DEBUG: GEMINI_API_KEY is not configured or is invalid. Returning default invitation message.');
     return DEFAULT_INVITATION;
   }
 
@@ -31,31 +45,49 @@ export async function generateInvitationMessage(input: GenerateInvitationMessage
 
   while (retries < MAX_RETRIES) {
     try {
-      return await generateInvitationMessageFlow(input);
+      const result = await generateInvitationMessageFlow(input);
+      const message = result.message;
+      console.log('AI_FLOW_DEBUG: Successfully generated AI invitation message.');
+
+      // Cache the result in development
+      if (process.env.NODE_ENV === 'development') {
+        cachedInvitation = message;
+        cacheTimestamp = Date.now();
+      }
+      return message;
     } catch (error: any) {
-      console.error(`AI Invitation generation failed (attempt ${retries + 1}/${MAX_RETRIES}):`, error);
-      // Check if it's a 503 or similar transient error
-      if (error.status === 'UNAVAILABLE' || error.status === 503 || error.message?.includes('503 Service Unavailable')) {
+      console.error(`AI_FLOW_DEBUG: AI Invitation generation failed (attempt ${retries + 1}/${MAX_RETRIES}):`, error.message);
+      // Check for transient or rate-limiting errors that are worth retrying
+      const isRetryable =
+        error.status === 'UNAVAILABLE' ||
+        error.status === 503 ||
+        error.message?.includes('503 Service Unavailable') ||
+        error.status === 'RESOURCE_EXHAUSTED' || // From your error log
+        error.message?.includes('429'); // From your error log
+
+      if (isRetryable) {
         retries++;
         if (retries < MAX_RETRIES) {
-          console.log(`Retrying in ${delay / 1000} seconds...`);
+          console.log(`AI_FLOW_DEBUG: Retrying in ${delay / 1000} seconds...`);
           await new Promise(resolve => setTimeout(resolve, delay));
           delay *= 2; // Exponential backoff
         }
       } else {
-        // If it's not a transient error, re-throw or return default immediately
+        // If it's not a transient error, log and return default
+        console.error('AI_FLOW_DEBUG: Non-transient error encountered. Returning default invitation.');
         return DEFAULT_INVITATION;
       }
     }
   }
   // If all retries fail
-  console.error('All AI Invitation generation retries failed.');
+  console.error('AI_FLOW_DEBUG: All AI Invitation generation retries failed. Returning default invitation.');
   return DEFAULT_INVITATION;
 }
 
-const prompt = ai.definePrompt({
+const invitationPrompt = ai.definePrompt({
   name: 'strangerThingsInvitationPrompt',
   input: {schema: GenerateInvitationMessageInputSchema},
+  output: {schema: InvitationMessageFlowOutputSchema},
   prompt: `You are an expert copywriter specializing in creating fun and mysterious birthday party invitations.
 Your task is to generate a compelling and engaging invitation message for a "Stranger Things"-themed birthday party.
 
@@ -76,10 +108,10 @@ const generateInvitationMessageFlow = ai.defineFlow(
   {
     name: 'generateInvitationMessageFlow',
     inputSchema: GenerateInvitationMessageInputSchema,
-    outputSchema: GenerateInvitationMessageOutputSchema,
+    outputSchema: InvitationMessageFlowOutputSchema,
   },
   async input => {
-    const {text} = await prompt(input);
-    return text;
+    const {output} = await invitationPrompt(input);
+    return output!;
   }
 );
