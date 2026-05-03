@@ -1,47 +1,46 @@
 'use client';
 
 import { useState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { User, Phone, Send } from 'lucide-react';
-import { submitRSVP } from '@/app/actions';
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button 
-      type="submit" 
-      disabled={pending}
-      className="w-full bg-secondary hover:bg-secondary/80 text-white font-headline text-lg flicker-neon transition-all"
-    >
-      {pending ? (
-        <span className="flex items-center gap-2">
-          <span className="animate-spin rounded-full h-4 w-4 border-t-2 border-white"></span>
-          ENVIANDO...
-        </span>
-      ) : (
-        <span className="flex items-center gap-2">
-          CONFIRMAR ASISTENCIA
-          <Send className="w-5 h-5" />
-        </span>
-      )}
-    </Button>
-  );
-}
 
 export function RSVPForm() {
+  const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  async function clientAction(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setPending(true);
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const formObject = Object.fromEntries(formData.entries());
+
     try {
-      setError(null);
-      await submitRSVP(formData);
-    } catch (e: any) {
-      setError(e.message || 'Error al enviar el formulario');
+      const res = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formObject),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al enviar el formulario');
+      }
+
+      if (data.redirectUrl) {
+        router.push(data.redirectUrl);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Ocurrió un error. Por favor, inténtalo de nuevo.');
+    } finally {
+      setPending(false);
     }
   }
 
@@ -56,13 +55,17 @@ export function RSVPForm() {
         </CardDescription>
       </CardHeader>
       <CardContent className="p-6">
-        <form action={clientAction} className="space-y-6">
+        <form
+          name="rsvp"
+          onSubmit={handleSubmit}
+          className="space-y-6"
+        >
           <div className="space-y-2">
             <Label htmlFor="name" className="text-foreground/80 font-medium flex items-center gap-2">
               <User className="w-4 h-4 text-primary" />
               Nombre Invitado
             </Label>
-            <Input 
+            <Input
               id="name"
               name="name"
               placeholder="Ej. Eleven"
@@ -76,7 +79,7 @@ export function RSVPForm() {
               <Phone className="w-4 h-4 text-primary" />
               Teléfono / WhatsApp
             </Label>
-            <Input 
+            <Input
               id="phone"
               name="phone"
               type="tel"
@@ -85,14 +88,30 @@ export function RSVPForm() {
               className="bg-background/50 border-border focus:border-primary focus:ring-primary transition-all"
             />
           </div>
-          
+
           {error && (
             <div className="p-3 bg-destructive/10 border border-destructive rounded-md text-destructive text-sm text-center">
               {error}
             </div>
           )}
 
-          <SubmitButton />
+          <Button
+            type="submit"
+            disabled={pending}
+            className="w-full bg-secondary hover:bg-secondary/80 text-white font-headline text-lg flicker-neon transition-all"
+          >
+            {pending ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></span>
+                ENVIANDO...
+              </span>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                CONFIRMAR ASISTENCIA
+                <Send className="w-5 h-5" />
+              </span>
+            )}
+          </Button>
         </form>
       </CardContent>
     </Card>
